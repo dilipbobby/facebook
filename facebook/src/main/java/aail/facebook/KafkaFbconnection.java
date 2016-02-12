@@ -155,6 +155,7 @@ public static void main(String[] args) throws FacebookException, JSONException, 
             }
             System.out.println(count);
             KeyedMessage<String, String> fbdata = new KeyedMessage<String, String>("facebook",output);
+              producer.send(fbdata);
             //System.out.println(z);
             //System.out.println(accessTokenString);
      
