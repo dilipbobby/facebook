@@ -261,7 +261,7 @@ public static void main(String[] args) throws FacebookException, JSONException, 
                 
                 in.close();
                }
-    	   producer.send(data);
+    	   //producer.send(data);
         System.out.println(count);
         System.out.println(postlikecount);
         System.out.println(commentscount);
