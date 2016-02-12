@@ -25,8 +25,8 @@ import kafka.producer.ProducerConfig;
 
 /**
  * @author Dilip bobby
- * @author vpotla
- * @author jayamerguga
+ * @author vanja potla
+ * @author jaya
  * @author syed jameer
  *
  */
@@ -69,7 +69,7 @@ public static void main(String[] args) throws FacebookException, JSONException, 
     facebook.setOAuthAccessToken(accessTokenString);
   ///BrandBazaarr,rakulpreetsinghs
      //AnushkaShetty
-     String fbquey ="rakulpreetsinghs/?fields=posts.limit(1).since(2015).until(now){id,message,name,type,picture,link,caption,description,icon,application,shares,updated_time,source,comments.summary(true){comment_count,message,can_remove,id,created_time,can_like,like_count,comments{comment_count,comments{comment_count}}},place,object_id,privacy,status_type,created_time,story,parent_id,story_tags,full_picture,likes.summary(true){id,name,username}},id,hometown,website,about,location,birthday,name,tagged{message_tags},category,category_list,talking_about_count,likes";
+     String fbquey ="BrandBazaarr/?fields=posts.limit(1).since(2015).until(now){id,message,name,type,picture,link,caption,description,icon,application,shares,updated_time,source,comments.summary(true){comment_count,message,can_remove,id,created_time,can_like,like_count,comments{comment_count,comments{comment_count}}},place,object_id,privacy,status_type,created_time,story,parent_id,story_tags,full_picture,likes.summary(true){id,name,username}},id,hometown,website,about,location,birthday,name,tagged{message_tags},category,category_list,talking_about_count,likes";
             
      		RawAPIResponse resquest = facebook.callGetAPI(fbquey);
             
