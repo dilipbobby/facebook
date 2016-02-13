@@ -23,29 +23,55 @@
 </dependency>
    
    
-   <dependency>
+  <!--  <dependency>
     <groupId>org.scala-lang</groupId>
     <artifactId>scala-library</artifactId>
     <version>2.10.3</version>
-</dependency>
-   <dependency>
+</dependency> -->
    
+   <dependency>
   <groupId>org.facebook4j</groupId>
   <artifactId>facebook4j-core</artifactId>
   <version>[2.4,)</version>
 </dependency>
    
-   <dependency>
+  <!--  <dependency>
 	<groupId>org.apache.kafka</groupId>
 	<artifactId>kafka_2.10</artifactId>
 	<version>0.9.0.0</version>
-</dependency>
+</dependency> -->
    
    <dependency>
 	<groupId>org.json</groupId>
 	<artifactId>json</artifactId>
 	<version>20140107</version>
 </dependency>
+
+<dependency>
+			<groupId>org.apache.kafka</groupId>
+			<artifactId>kafka_2.9.2</artifactId>
+			<version>0.8.1.1</version>
+			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>jmxri</artifactId>
+					<groupId>com.sun.jmx</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jms</artifactId>
+					<groupId>javax.jms</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jmxtools</artifactId>
+					<groupId>com.sun.jdmk</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.5</version>
+		</dependency>
    
     <dependency>
      <groupId>junit</groupId>
