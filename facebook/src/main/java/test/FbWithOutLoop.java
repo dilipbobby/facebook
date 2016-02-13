@@ -88,7 +88,9 @@ public static void main(String[] args) throws FacebookException, JSONException, 
                     post_obj = new JSONObject(post_inputLine); 
                     
                    JSONArray addposts=post_obj.getJSONArray("data");
-                   
+                   /*if(addposts ==null){*/
+                   System.out.println("null" +addposts);
+                
                    JSONObject addspostobj = addposts.getJSONObject(0);
                    
                    post_data.put(addspostobj);
@@ -252,6 +254,8 @@ public static void main(String[] args) throws FacebookException, JSONException, 
                {
             	   JSONObject jo = post_obj.getJSONObject("paging");
             	   post_next = jo.getString("next");
+            	   System.out.println(post_next);
+            	   System.out.println("going to next");
                }
                catch(Exception e)
                {
