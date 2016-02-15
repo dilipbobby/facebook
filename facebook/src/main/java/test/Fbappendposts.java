@@ -34,16 +34,16 @@ public static void main(String[] args) throws FacebookException, JSONException, 
      facebook.setOAuthAccessToken(accessTokenString);
   ///BrandBazaarr,rakulpreetsinghs
      //AnushkaShetty
-     String m ="BrandBazaarr/?fields=posts.limit(1).since(2015).until(now){id,message,name,type,picture,link,caption,description,icon,application,shares,updated_time,source,comments.summary(true){comment_count,message,can_remove,id,created_time,can_like,like_count,comments{comment_count,comments{comment_count}}},place,object_id,privacy,status_type,created_time,story,parent_id,story_tags,full_picture,likes.summary(true){id,name,username}},id,hometown,website,about,location,birthday,name,tagged{message_tags},category,category_list,talking_about_count,likes";
+     String fbquey ="BrandBazaarr/?fields=posts.limit(1).since(2015).until(now){id,message,name,type,picture,link,caption,description,icon,application,shares,updated_time,source,comments.summary(true){comment_count,message,can_remove,id,created_time,can_like,like_count,comments{comment_count,comments{comment_count}}},place,object_id,privacy,status_type,created_time,story,parent_id,story_tags,full_picture,likes.summary(true){id,name,username}},id,hometown,website,about,location,birthday,name,tagged{message_tags},category,category_list,talking_about_count,likes";
             
-     		RawAPIResponse res1 = facebook.callGetAPI(m);
+     		RawAPIResponse rawresponse = facebook.callGetAPI(fbquey);
             
            
-            JSONObject jsonObject55= res1.asJSONObject();
+            JSONObject Mainjsonobject= rawresponse.asJSONObject();
          
             String postlike;
             String commentnext;
-            JSONObject posts = jsonObject55.getJSONObject("posts");
+            JSONObject posts = Mainjsonobject.getJSONObject("posts");
             
             JSONArray post_data = posts.getJSONArray("data");
             
@@ -205,13 +205,13 @@ public static void main(String[] args) throws FacebookException, JSONException, 
               }//comments catch close
 */              	 	}
                   
-                  System.out.println("with appendeds" +jsonObject55);
+                  System.out.println("with appendeds" +Mainjsonobject);
               	
                   BufferedWriter writer = null;
                        try
                        {
                            writer = new BufferedWriter( new FileWriter("/home/storm/Videos/posts.json"));
-                           writer.write( jsonObject55.toString());
+                           writer.write( Mainjsonobject.toString());
                            System.out.println("Done writing");
 
                        }

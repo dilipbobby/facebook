@@ -8,8 +8,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Properties;
-
 import facebook4j.Facebook;
 import facebook4j.FacebookException;
 import facebook4j.FacebookFactory;
@@ -19,66 +17,31 @@ import facebook4j.internal.org.json.JSONArray;
 import facebook4j.internal.org.json.JSONException;
 import facebook4j.internal.org.json.JSONObject;
 //import org.json.*;
-import kafka.javaapi.producer.Producer;
-import kafka.producer.KeyedMessage;
-import kafka.producer.ProducerConfig;
 
-/**
- * @author Dilip bobby
- * @author vanja potla
- * @author jaya
- * @author syed jameer
- *
- */
-public class FbKafka{
+public class FacebookPostsGetter{
 
 
-/**
- * @param args
- * @throws FacebookException
- * @throws JSONException
- * @throws IOException
- */
-
+	//static
 public static void main(String[] args) throws FacebookException, JSONException, IOException {
 
-	/**
-	 * kafka connections
-	 */
-	Properties props = new Properties();
-    props.put("metadata.broker.list", "sandbox.hortonworks.com:6667");
-    props.put("serializer.class", "kafka.serializer.StringEncoder");
-    props.put("partitioner.class", "example.producer.SimplePartitioner");
-    props.put("request.required.acks", "1");
-    props.put("retry.backoff.ms", "150");
-    props.put("message.send.max.retries","10");
-    props.put("topic.metadata.refresh.interval.ms","0");
-
-    ProducerConfig config = new ProducerConfig(props);
-	     
-	// Generate facebook instance.
+    // Generate facebook instance.
     Facebook facebook = new FacebookFactory().getInstance();
     // Use default values for oauth app id.
     facebook.setOAuthAppId("1238270156199618", "177cef157d0c8c006d0067b49b4bde32");
    
     AccessToken accessTokenString = facebook.getOAuthAppAccessToken();
     
-    facebook.setOAuthAccessToken(accessTokenString);
- //BrandBazaarr,rakulpreetsinghs
+     facebook.setOAuthAccessToken(accessTokenString);
+  ///BrandBazaarr,rakulpreetsinghs
  //AnushkaShetty
      String fbquey ="BrandBazaarr/?fields=posts.limit(1).since(2015).until(now){id,message,name,type,picture,link,caption,description,icon,application,shares,updated_time,source,comments.summary(true){comment_count,message,can_remove,id,created_time,can_like,like_count,comments{comment_count,comments{comment_count}}},place,object_id,privacy,status_type,created_time,story,parent_id,story_tags,full_picture,likes.summary(true){id,name,username}},id,hometown,website,about,location,birthday,name,tagged{message_tags},category,category_list,talking_about_count,likes";
             
-     		RawAPIResponse resquest = facebook.callGetAPI(fbquey);
-            
-            JSONObject jsonresponse= resquest.asJSONObject();
-           
-            String fbresponse=jsonresponse.toString();
+     		RawAPIResponse rawresponse = facebook.callGetAPI(fbquey);
+            JSONObject Mainjsonobject= rawresponse.asJSONObject();
          
             String postlike;
-            
             String commentnext;
-            
-            JSONObject posts = jsonresponse.getJSONObject("posts");
+            JSONObject posts = Mainjsonobject.getJSONObject("posts");
             
             JSONArray post_data = posts.getJSONArray("data");
             
@@ -86,12 +49,13 @@ public static void main(String[] args) throws FacebookException, JSONException, 
             
     	    String post_next = post_paging.getString("next");
     	    
-    	    
-    	    int count = 1;
-    	    int postlikecount=1;
-    	    int commentscount =1;
-    	  
-    	   while(post_next != null)
+    	   int count = 1;
+    	   int postlikecount=1;
+    	   int commentscount =1;
+    	   JSONArray commetsarry;
+    	   JSONArray likesdata;
+   	    
+    	    while(post_next != null)
     	    {
     	    	count++;
 
@@ -106,22 +70,23 @@ public static void main(String[] args) throws FacebookException, JSONException, 
                 JSONObject post_obj = new JSONObject();
                
                 while ((post_inputLine = in.readLine()) != null) 
-                
                 {
                     post_obj = new JSONObject(post_inputLine); 
                     
                    JSONArray addposts=post_obj.getJSONArray("data");
                    
-                   JSONObject addspostobj = addposts.getJSONObject(0);
-                   
-                   post_data.put(addspostobj);
+                for (int i = 0; i < addposts.length(); i++)
+                  {
+              	    JSONObject addspostobj = addposts.getJSONObject(i);
+              	       
+              	    post_data.put(addspostobj);
               	    //adding up the postlikes
               	  System.out.println("addpost"+addspostobj);
               	
 //************************************************************* likes ****************************************************************
               	  JSONObject likes = addspostobj.getJSONObject("likes");
               	  
-              	 JSONArray likesdata=likes.getJSONArray("data");  //likes of the a post object
+              	   likesdata=likes.getJSONArray("data");  //likes of the a post object
                   
               	  try{
               	  
@@ -136,10 +101,9 @@ public static void main(String[] args) throws FacebookException, JSONException, 
                 	  URL oraclepostlike = new URL(postlike);
                       URLConnection oraclepostlikeyc = oraclepostlike.openConnection();
                       BufferedReader oraclepostlikeycin = new BufferedReader(new InputStreamReader(oraclepostlikeyc.getInputStream()));
-                      String postlikeinputLine;
-                      
-                      JSONObject postlikeadd = new JSONObject();
-                      while ((postlikeinputLine = oraclepostlikeycin.readLine()) != null){
+                       String postlikeinputLine;
+                       JSONObject postlikeadd = new JSONObject();
+                       while ((postlikeinputLine = oraclepostlikeycin.readLine()) != null){
                     	   
                     	   postlikeadd = new JSONObject(postlikeinputLine);
                     	   System.out.println(postlikeadd);
@@ -148,7 +112,7 @@ public static void main(String[] args) throws FacebookException, JSONException, 
                     	   {
                     		   JSONObject addslikobj = postaddlikes.getJSONObject(like);
                                likesdata.put(addslikobj);
-                               System.out.println("ADDED LIKES IN LIKESDATA");
+                              // System.out.println("ADDED LIKES CHECK IN LIKESDATA");
                               // System.out.println(likesdata);
                     	   }//for close
                        }
@@ -157,8 +121,7 @@ public static void main(String[] args) throws FacebookException, JSONException, 
                        {
                            JSONObject likesnullmake= postlikeadd.getJSONObject("paging");
                     	   postlike = likesnullmake.getString("next");
-                    	  
-                    	   System.out.println("Likes had next link");
+                    	   System.out.println();
                        }
                        catch(Exception e)
                        {
@@ -170,7 +133,7 @@ public static void main(String[] args) throws FacebookException, JSONException, 
                        }
                   
                  
-                  System.out.println("POST LIKES INCREMENT " +postlikecount);
+                  System.out.println("POST LIKEZS INCREMENT " +postlikecount);
                  
   }//try  close
                    catch(Exception e){
@@ -183,10 +146,9 @@ public static void main(String[] args) throws FacebookException, JSONException, 
               	  
 //********************************************************** comments *******************************************************************              	  
                 	
-              //comments 
-              
-              JSONObject comments = addspostobj.getJSONObject("comments");
-              JSONArray commetsarry=comments.getJSONArray("data");
+              	  //comments 
+              /*JSONObject comments = addspostobj.getJSONObject("comments");
+              commetsarry=comments.getJSONArray("data");
               try{
               
             	  JSONObject commentspg=comments.getJSONObject("paging");
@@ -194,43 +156,42 @@ public static void main(String[] args) throws FacebookException, JSONException, 
                   while(commentnext != null)
                   
                   {
-                	System.out.println("entred into comment link**********************************");
+                	System.out.println("*********************************8");
                   	commentscount++;
                   	URL oraclecomments = new URL(commentnext);
                   	URLConnection commentsyc = oraclecomments.openConnection();
                   	BufferedReader commentsin = new BufferedReader(new InputStreamReader(commentsyc.getInputStream()));
                   	String commentsinputLine;
-                  	JSONObject commentsobj = new JSONObject();
-                  	
+                  	 JSONObject commentsobj = new JSONObject();
                   	while ((commentsinputLine = commentsin.readLine()) != null) {
                   		
                   		commentsobj = new JSONObject(commentsinputLine); 
+                        
                         JSONArray commentsadd=commentsobj.getJSONArray("data");
-                        for (int comentsinc = 0;comentsinc<commentsadd.length();comentsinc++)
+                        for (int comentsinc = 0; comentsinc < commentsadd.length(); comentsinc++)
                         {
                     	    
-                        	JSONObject commentsaddobj = commentsadd.getJSONObject(comentsinc);
+                        	JSONObject commentsaddobj = commentsadd.getJSONObject(i);
                         	commetsarry.put(commentsaddobj);
-                        	System.out.println("ADDED COMMENTS TO HEAD COMMENT SECTION");
+                        	System.out.println(commetsarry);
                     	}
                   		
                   	}//comments readline while close
                   	
                   	 try
                      {
-                         JSONObject makecommentsnull= commentsobj.getJSONObject("paging");
-                         commentnext = makecommentsnull.getString("next");
-                         System.out.println("COMMENTS HAVE NEXT LINK");
+                         JSONObject commentssnullmake= commentsobj.getJSONObject("paging");
+                         commentnext = commentssnullmake.getString("next");
                      }
                      catch(Exception e)
                      {
-                    	 commentnext=null;
-                  	   System.out.println("there is no next in comments paging");
+                  	   postlike=null;
+                  	   System.out.println("there is no next in likes paging");
                      }
                       
                   	commentsin.close();
                      }
-                  System.out.println("POST LIKEZS INCREMENT " +commentscount);
+                  
                   
                   
               
@@ -240,15 +201,15 @@ public static void main(String[] args) throws FacebookException, JSONException, 
             	  commentnext=null;
            	   System.out.println("there is no comments next");
               }//comments catch close
-            	 	
+*/              	 	}
                   
-                  System.out.println("with appendeds" +jsonresponse);
+                  System.out.println("with appendeds" +Mainjsonobject);
               	
-                  /*BufferedWriter writer = null;
+                  BufferedWriter writer = null;
                        try
                        {
                            writer = new BufferedWriter( new FileWriter("/home/storm/Videos/posts.json"));
-                           writer.write( jsonresponse.toString());
+                           writer.write( Mainjsonobject.toString());
                            System.out.println("Done writing");
 
                        }
@@ -268,14 +229,14 @@ public static void main(String[] args) throws FacebookException, JSONException, 
                         	   System.out.println("dilip");
 
                            }
-                       }*/
-                 
+                       }
            
     	    }
   try
                {
             	   JSONObject jo = post_obj.getJSONObject("paging");
             	   post_next = jo.getString("next");
+            	   System.out.println("try "+post_next);
                }
                catch(Exception e)
                {
@@ -285,13 +246,9 @@ public static void main(String[] args) throws FacebookException, JSONException, 
                 
                 in.close();
                }
-    	   final Producer<String, String> producer = new Producer<String, String>(config);
-           KeyedMessage<String, String> fbdata = new KeyedMessage<String, String>("fb_test",fbresponse);
-           producer.send(fbdata);
-       
-      /*  System.out.println(count);
+        System.out.println(count);
         System.out.println(postlikecount);
-        System.out.println(commentscount);*/
+        System.out.println(commentscount);
    
     }
 }
