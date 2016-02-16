@@ -34,7 +34,7 @@ public static void main(String[] args) throws FacebookException, JSONException, 
      facebook.setOAuthAccessToken(accessTokenString);
   ///BrandBazaarr,rakulpreetsinghs
      //AnushkaShetty
-     String fbquey ="BrandBazaarr/?fields=posts.limit(1).since(2015).until(now){id,message,name,type,picture,link,caption,description,icon,application,shares,updated_time,source,comments.summary(true){comment_count,message,can_remove,id,created_time,can_like,like_count,comments{comment_count,comments{comment_count}}},place,object_id,privacy,status_type,created_time,story,parent_id,story_tags,full_picture,likes.summary(true){id,name,username}},id,hometown,website,about,location,birthday,name,tagged{message_tags},category,category_list,talking_about_count,likes";
+     String fbquey ="AnushkaShetty/?fields=posts.limit(1).since(2015).until(now){id,message,name,type,picture,link,caption,description,icon,application,shares,updated_time,source,comments.summary(true){comment_count,message,can_remove,id,created_time,can_like,like_count,comments{comment_count,comments{comment_count}}},place,object_id,privacy,status_type,created_time,story,parent_id,story_tags,full_picture,likes.summary(true){id,name,username}},id,hometown,website,about,location,birthday,name,tagged{message_tags},category,category_list,talking_about_count,likes";
             
      		RawAPIResponse rawresponse = facebook.callGetAPI(fbquey);
             
@@ -149,7 +149,7 @@ public static void main(String[] args) throws FacebookException, JSONException, 
 //********************************************************** comments *******************************************************************              	  
                 	
               	  //comments 
-              /*JSONObject comments = addspostobj.getJSONObject("comments");
+             JSONObject comments = addspostobj.getJSONObject("comments");
               commetsarry=comments.getJSONArray("data");
               try{
               
@@ -203,7 +203,7 @@ public static void main(String[] args) throws FacebookException, JSONException, 
             	  commentnext=null;
            	   System.out.println("there is no comments next");
               }//comments catch close
-*/              	 	}
+             	 	}
                   
                   System.out.println("with appendeds" +Mainjsonobject);
               	
