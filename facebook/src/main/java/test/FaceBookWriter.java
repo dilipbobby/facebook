@@ -322,7 +322,7 @@ public static void main(String[] args) throws FacebookException, JSONException, 
             
             	System.out.println("THE EXCEPTION I CAUGHT  "+e);
             }    
-}
-}
+}//main
+}//class
 
 
