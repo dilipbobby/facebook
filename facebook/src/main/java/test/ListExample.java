@@ -64,7 +64,7 @@ List<String> list3 = new ArrayList<String>();
                  }//foreach close
             
            }//while close
-           System.out.println(idslist);
+        //   System.out.println(idslist);
            
   		//System.out.println(names.get(0));
          Iterator<String> namesi= names.iterator();
@@ -74,8 +74,8 @@ List<String> list3 = new ArrayList<String>();
                 }//foreach close
            
            }//while close
-           System.out.println(nameslist);
-           
+          System.out.println(nameslist);
+        
         String[] arrsplitstring=splitstring.split(",");
         String[] arrssplitid=splitid.split(",");
     	String[] arrsplitedscreenname=splitscreenname.split(",");
@@ -84,12 +84,12 @@ List<String> list3 = new ArrayList<String>();
     	List<String> wordid = Arrays.asList(arrssplitid);
     	List<String> wordscreenlist = Arrays.asList(arrsplitedscreenname);
 
-for (int ii=0;ii<wordList.size();ii++){
+/*for (int ii=0;ii<wordList.size();ii++){
     	
     		list1.add(wordList.get(ii));
     		
     	}
-    	//System.out.println("Getting the list1 objects  " +list1 );
+   // System.out.println("Getting the list1 objects  " +list1 );
     	
     	for(int j=0;j<wordid.size();j++){
     		list2.add(wordid.get(j));
@@ -100,13 +100,11 @@ for (int ii=0;ii<wordList.size();ii++){
         	
     		list3.add(wordscreenlist.get(k));
     		
-    	}
+    	}*/
     	//System.out.println("Getting the list3 objects  " +list3);
     	
   	// initializing lists
-  
-      
-    	/*List<String> list4 = new ArrayList<String>();
+   List<String> list4 = new ArrayList<String>();
 
     	// Check the three lists have the same number of elements.
     	// If not, return (you have to show and error)    
@@ -124,10 +122,35 @@ for (int ii=0;ii<wordList.size();ii++){
     	        list4.add(wordidIt.next());
     	        list4.add(wordscreenlistIt.next());
     	        
-    	        break; // exit the while, because you only want the first element.
+    	      break; // exit the while, because you only want the first element.
+    	      
     	}
-    	System.out.println("  "+list4);
-    	List<String> list5 = new ArrayList<String>();*/
+           List<String> list41 = new ArrayList<String>();
+
+       	// Check the three lists have the same number of elements.
+       	// If not, return (you have to show and error)    //animalslist //idslist //nameslist
+       	if (! (
+       	  (animalslist.size() == idslist.size() ) 
+       	  && 
+       	  (idslist.size() == nameslist.size() )
+       	) ) return;
+
+       	Iterator<String> wordListItt = animalslist.iterator();
+       	Iterator<String> wordidItt = idslist.iterator();
+       	Iterator<String> wordscreenlistItt= nameslist.iterator();
+       	while (wordListIt.hasNext()) {
+       		System.out.println("Enter the loops");
+       	        list41.add(wordListItt.next());
+       	        System.out.println(list41);
+       	        list41.add(wordidItt.next());
+       	     System.out.println(list41);
+       	        list41.add(wordscreenlistItt.next());
+       	     System.out.println(list41);
+       	           	     break; // exit the while, because you only want the first element.
+       	      
+       	}
+    	System.out.println("  "+41);
+    	List<String> list5 = new ArrayList<String>();
 
     	// Check the three lists have the same number of elements.
     	// If not, return (you have to show and error)   
@@ -146,7 +169,7 @@ for (int ii=0;ii<wordList.size();ii++){
     	        list5.add(wordidIt.next());
     	        list5.add(wordscreenlistIt.next());
     	}
-    	System.out.println(list5);*/
+    	System.out.println(list5);
 /*
      List<String> l = new ArrayList<String>();  
         
@@ -177,4 +200,4 @@ for (int ii=0;ii<wordList.size();ii++){
 	
 	}
 
-           }
+ }

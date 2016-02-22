@@ -526,6 +526,7 @@ DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 			       	
 			        try{           	
 			       	 can_remove=data_obj.getBoolean("can_remove");
+			       	 System.out.println("boolean comment like "+can_remove);
 			      	}catch(Exception e){}
 
 			       	try{
