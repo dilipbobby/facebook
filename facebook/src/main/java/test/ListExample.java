@@ -33,6 +33,16 @@ List<String> list3 = new ArrayList<String>();
            l.add("bobby,lion,dilip");
          
            System.out.println(l);
+          /* Iterator<String> splitl= l.iterator();
+           while(splitl.hasNext())
+           {
+                 for (String retval: splitl.next().split(",")){
+                	 animalslist.add(retval);
+                 }//foreach close
+           
+           }//while closejps
+           
+           System.out.println("THIS IS SPLITTED ONE "+animalslist);*/
         
    		Iterator<String> l1Iterator = l.iterator();
    		while (l1Iterator.hasNext()) {
@@ -197,7 +207,9 @@ List<String> list3 = new ArrayList<String>();
 		
 	}
 */	
+	String test="lan,man,wan";
 	
+	//System.out.println(test);
 	}
 
  }
