@@ -127,8 +127,15 @@ public class FaceBookLastTrail {
 								for (int i = 0; i < addposts.length(); i++) {
 									JSONObject addspostobj = addposts.getJSONObject(i);
 
+									
+									System.out.println("before ADDING " + postdata);
+									System.out.println(postdata.length());
+									postdata.remove(postdata.length() - 1);
+									System.out.println(postdata.length());
 									postdata.put(addspostobj);
-									output = jsonobjmain.toString();
+									
+								/*	postdata.put(addspostobj);
+									output = jsonobjmain.toString();*/
 									// adding up the postlikes
 									System.out.println("ADDED POSTS CHANGED TO-STRING");
 
@@ -207,6 +214,7 @@ public class FaceBookLastTrail {
 									// comments
 									JSONObject comments = addspostobj.getJSONObject("comments");
 									commetsarry = comments.getJSONArray("data");
+									System.out.println("COMMENTS DATA "+commetsarry);
 									try {
 
 										JSONObject commentspg = comments.getJSONObject("paging");

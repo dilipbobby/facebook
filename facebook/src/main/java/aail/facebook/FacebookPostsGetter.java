@@ -76,15 +76,15 @@ public class FacebookPostsGetter {
 		facebook.setOAuthAccessToken(accessTokenString);
 		/// BandBazaarr,rakulpreetsinghs
 		// AnushkaShetty//AnasuyaOfficial
-		String fbquery = "rakulpreetsinghs/?fields=posts.limit(1){id,message,name,type,picture,link,caption,description,icon,application,shares,updated_time,source,comments.summary(true){comment_count,message,can_remove,id,created_time,can_like,like_count,comments{comment_count,comments{comment_count}}},place,object_id,privacy,status_type,created_time,story,parent_id,story_tags,full_picture,likes.summary(true){id,name,username}},id,hometown,website,about,location,birthday,name,tagged{message_tags},category,category_list,talking_about_count,likes";
+		String fbquery = "BrandBazaarr/?fields=posts.limit(1){id,message,name,type,picture,link,caption,description,icon,application,shares,updated_time,source,comments.summary(true){comment_count,message,can_remove,id,created_time,can_like,like_count,comments{comment_count,comments{comment_count}}},place,object_id,privacy,status_type,created_time,story,parent_id,story_tags,full_picture,likes.summary(true){id,name,username}},id,hometown,website,about,location,birthday,name,tagged{message_tags},category,category_list,talking_about_count,likes";
 		try {
 			RawAPIResponse rawresponse = facebook.callGetAPI(fbquery);
 			JSONObject jsonobjmain = rawresponse.asJSONObject();
 
 			int link = 0;
 			int count = 1;
-			int postlikecount = 1;
-			int commentscount = 1;
+     		int postlikecount = 1;
+	    	int commentscount = 1;
 			JSONArray commetsarry;
 			JSONArray likesdata;
 			String postlike;
@@ -110,7 +110,7 @@ public class FacebookPostsGetter {
 					URL oraclepostlike = new URL(postlike0);
 					URLConnection oraclepostlikeyc = oraclepostlike.openConnection();
 					BufferedReader oraclepostlikeycin = new BufferedReader(
-							new InputStreamReader(oraclepostlikeyc.getInputStream()));
+					new InputStreamReader(oraclepostlikeyc.getInputStream()));
 					String postlikeinputLine0;
 					JSONObject postlikeadd0 = new JSONObject();
 					while ((postlikeinputLine0 = oraclepostlikeycin.readLine()) != null) {
@@ -146,6 +146,7 @@ public class FacebookPostsGetter {
 			// comments
 			JSONObject comments0 = number.getJSONObject("comments");
 			commetsarry = comments0.getJSONArray("data");
+			System.out.println("COMMENTS ARRAY DATA"+commetsarry);
 			try {
 
 				JSONObject commentspg0 = comments0.getJSONObject("paging");
@@ -169,7 +170,7 @@ public class FacebookPostsGetter {
 
 							JSONObject commentsaddobj = commentsadd.getJSONObject(comentsinc);
 							commetsarry.put(commentsaddobj);
-							System.out.println(commetsarry);
+							//System.out.println(""+commetsarry);
 						}
 
 					} // comments readline while close
@@ -226,7 +227,7 @@ public class FacebookPostsGetter {
 					JSONArray addposts = post_obj.getJSONArray("data");
 
 					for (int i = 0; i < addposts.length(); i++) {
-						// JSONArray postdata = posts.getJSONArray("data");
+						
 						System.out.println("before ADDING " + postdata);
 						System.out.println(postdata.length());
 
@@ -303,6 +304,7 @@ public class FacebookPostsGetter {
 						// comments
 						JSONObject comments = addspostobj.getJSONObject("comments");
 						commetsarry = comments.getJSONArray("data");
+						System.out.println("THE COMMENTS ARRAY"+commetsarry);
 						try {
 
 							JSONObject commentspg = comments.getJSONObject("paging");
@@ -327,7 +329,7 @@ public class FacebookPostsGetter {
 
 										JSONObject commentsaddobj = commentsadd.getJSONObject(comentsinc);
 										commetsarry.put(commentsaddobj);
-										System.out.println("need to work " + commetsarry);
+										//System.out.println("need to work " + commetsarry);
 									}
 
 								} // comments readline while close
@@ -352,14 +354,7 @@ public class FacebookPostsGetter {
 						// System.out.println("with appendeds" + jsonobjmain);
 						output = jsonobjmain.toString();
 						System.out.println("AFTER ADDING OUPUT" + output);
-						/*
-						 * try { KeyedMessage<String, String> fbdata = new
-						 * KeyedMessage<String, String>("test123", output);
-						 * producer.send(fbdata); System.out.println(
-						 * "*******  SENT THE POST ****** " + count);
-						 * 
-						 * } catch (Exception e) { }
-						 */
+						
 						if (postdata.length() == 1) {
 							try {
 								KeyedMessage<String, String> fbdata = new KeyedMessage<String, String>("test123",
@@ -372,16 +367,7 @@ public class FacebookPostsGetter {
 						}
 					} // for loop end
 
-					/*
-					 * System.out.println("with appendeds" + jsonobjmain);
-					 * output = jsonobjmain.toString(); try {
-					 * KeyedMessage<String, String> fbdata = new
-					 * KeyedMessage<String, String>("test123", output);
-					 * producer.send(fbdata); System.out.println(
-					 * "*******  SENT THE POST ****** " + count);
-					 * 
-					 * } catch (Exception e) { }
-					 */
+					
 
 				}
 				try {
