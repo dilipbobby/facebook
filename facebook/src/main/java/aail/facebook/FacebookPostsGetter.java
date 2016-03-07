@@ -74,28 +74,139 @@ public class FacebookPostsGetter {
 		AccessToken accessTokenString = facebook.getOAuthAppAccessToken();
 
 		facebook.setOAuthAccessToken(accessTokenString);
-		/// BrBandBazaarr,rakulpreetsinghs
-		// AnushkaShetty
-		String fbquery = "BrandBazaarr/?fields=posts.limit(1).since(2015).until(now){id,message,name,type,picture,link,caption,description,icon,application,shares,updated_time,source,comments.summary(true){comment_count,message,can_remove,id,created_time,can_like,like_count,comments{comment_count,comments{comment_count}}},place,object_id,privacy,status_type,created_time,story,parent_id,story_tags,full_picture,likes.summary(true){id,name,username}},id,hometown,website,about,location,birthday,name,tagged{message_tags},category,category_list,talking_about_count,likes";
+		/// BandBazaarr,rakulpreetsinghs
+		// AnushkaShetty//AnasuyaOfficial
+		String fbquery = "rakulpreetsinghs/?fields=posts.limit(1){id,message,name,type,picture,link,caption,description,icon,application,shares,updated_time,source,comments.summary(true){comment_count,message,can_remove,id,created_time,can_like,like_count,comments{comment_count,comments{comment_count}}},place,object_id,privacy,status_type,created_time,story,parent_id,story_tags,full_picture,likes.summary(true){id,name,username}},id,hometown,website,about,location,birthday,name,tagged{message_tags},category,category_list,talking_about_count,likes";
 		try {
 			RawAPIResponse rawresponse = facebook.callGetAPI(fbquery);
 			JSONObject jsonobjmain = rawresponse.asJSONObject();
 
-			String postlike;
-			String commentnext;
-			JSONObject posts = jsonobjmain.getJSONObject("posts");
-
-			JSONArray postdata = posts.getJSONArray("data");
-
-			JSONObject postpaging = posts.getJSONObject("paging");
-
-			String postnext = postpaging.getString("next");
-
+			int link = 0;
 			int count = 1;
 			int postlikecount = 1;
 			int commentscount = 1;
 			JSONArray commetsarry;
 			JSONArray likesdata;
+			String postlike;
+			String commentnext = null;
+
+			JSONObject posts = jsonobjmain.getJSONObject("posts");
+
+			JSONArray postdata = posts.getJSONArray("data");
+
+			JSONObject number = postdata.getJSONObject(0);
+
+			JSONObject likes0 = number.getJSONObject("likes");
+			likesdata = likes0.getJSONArray("data");
+			try {
+
+				JSONObject paging0 = likes0.getJSONObject("paging");
+
+				String postlike0 = paging0.getString("next");
+
+				while (postlike0 != null) {
+					// System.out.println("***********************************");
+					postlikecount++;
+					URL oraclepostlike = new URL(postlike0);
+					URLConnection oraclepostlikeyc = oraclepostlike.openConnection();
+					BufferedReader oraclepostlikeycin = new BufferedReader(
+							new InputStreamReader(oraclepostlikeyc.getInputStream()));
+					String postlikeinputLine0;
+					JSONObject postlikeadd0 = new JSONObject();
+					while ((postlikeinputLine0 = oraclepostlikeycin.readLine()) != null) {
+
+						postlikeadd0 = new JSONObject(postlikeinputLine0);
+						System.out.println(postlikeadd0);
+						JSONArray postaddlikes0 = postlikeadd0.getJSONArray("data");
+						for (int like1 = 0; like1 < postaddlikes0.length(); like1++) {
+							JSONObject addslikobj0 = postaddlikes0.getJSONObject(like1);
+							likesdata.put(addslikobj0);
+
+						} // for close
+					}
+
+					try {
+						JSONObject likesnullmake0 = postlikeadd0.getJSONObject("paging");
+						postlike = likesnullmake0.getString("next");
+						System.out.println();
+					} catch (Exception e) {
+						postlike0 = null;
+						System.out.println("there is no next in likes paging");
+					}
+
+					oraclepostlikeycin.close();
+				}
+
+			} // try close
+			catch (Exception e) {
+
+				System.out.println("there is no next in likespg0");
+			}
+
+			// comments
+			JSONObject comments0 = number.getJSONObject("comments");
+			commetsarry = comments0.getJSONArray("data");
+			try {
+
+				JSONObject commentspg0 = comments0.getJSONObject("paging");
+				String commentnext0 = commentspg0.getString("next");
+				while (commentnext != null)
+
+				{
+					System.out.println("*****************************************");
+
+					URL oraclecomments = new URL(commentnext);
+					URLConnection commentsyc = oraclecomments.openConnection();
+					BufferedReader commentsin = new BufferedReader(new InputStreamReader(commentsyc.getInputStream()));
+					String commentsinputLine;
+					JSONObject commentsobj = new JSONObject();
+					while ((commentsinputLine = commentsin.readLine()) != null) {
+
+						commentsobj = new JSONObject(commentsinputLine);
+
+						JSONArray commentsadd = commentsobj.getJSONArray("data");
+						for (int comentsinc = 0; comentsinc < commentsadd.length(); comentsinc++) {
+
+							JSONObject commentsaddobj = commentsadd.getJSONObject(comentsinc);
+							commetsarry.put(commentsaddobj);
+							System.out.println(commetsarry);
+						}
+
+					} // comments readline while close
+
+					try {
+						JSONObject commentssnullmake = commentsobj.getJSONObject("paging");
+						commentnext = commentssnullmake.getString("next");
+					} catch (Exception e) {
+						commentnext = null;
+						System.out.println("there is no comments next");
+					}
+
+					commentsin.close();
+				}
+
+			} // comments try close
+			catch (Exception e) {
+				commentnext = null;
+				System.out.println("there is no comments next");
+			} // comments catch close
+				// System.out.println(ouput);
+			output = jsonobjmain.toString();
+			if (postdata.length() == 1) {
+				try {
+					KeyedMessage<String, String> fbdata = new KeyedMessage<String, String>("test123", output);
+					producer.send(fbdata);
+					System.out.println(output);
+					System.out.println("*******  SENT THE POST ****** " + count);
+
+				} catch (Exception e) {
+				}
+			}
+			// ***************************************************************
+
+			JSONObject postpaging = posts.getJSONObject("paging");
+
+			String postnext = postpaging.getString("next");
 
 			while (postnext != null) {
 				count++;
@@ -115,11 +226,14 @@ public class FacebookPostsGetter {
 					JSONArray addposts = post_obj.getJSONArray("data");
 
 					for (int i = 0; i < addposts.length(); i++) {
-						JSONObject addspostobj = addposts.getJSONObject(i);
+						// JSONArray postdata = posts.getJSONArray("data");
+						System.out.println("before ADDING " + postdata);
+						System.out.println(postdata.length());
 
+						JSONObject addspostobj = addposts.getJSONObject(i);
+						postdata.remove(postdata.length() - 1);
+						System.out.println(postdata.length());
 						postdata.put(addspostobj);
-						// adding up the postlikes
-						System.out.println("addpost" + addspostobj);
 
 						// *************************************************************
 						// likes
@@ -136,7 +250,7 @@ public class FacebookPostsGetter {
 							postlike = paging.getString("next");
 
 							while (postlike != null) {
-								// System.out.println("*********************************8");
+								// System.out.println("***********************************");
 								postlikecount++;
 								URL oraclepostlike = new URL(postlike);
 								URLConnection oraclepostlikeyc = oraclepostlike.openConnection();
@@ -180,7 +294,7 @@ public class FacebookPostsGetter {
 
 						// **********************************************************
 						// likes end
-						// ********************************************************************
+						// *******************************************************************
 
 						// **********************************************************
 						// comments
@@ -196,7 +310,7 @@ public class FacebookPostsGetter {
 							while (commentnext != null)
 
 							{
-								System.out.println("*********************************8");
+								System.out.println("*****************************************");
 								commentscount++;
 								URL oraclecomments = new URL(commentnext);
 								URLConnection commentsyc = oraclecomments.openConnection();
@@ -211,9 +325,9 @@ public class FacebookPostsGetter {
 									JSONArray commentsadd = commentsobj.getJSONArray("data");
 									for (int comentsinc = 0; comentsinc < commentsadd.length(); comentsinc++) {
 
-										JSONObject commentsaddobj = commentsadd.getJSONObject(i);
+										JSONObject commentsaddobj = commentsadd.getJSONObject(comentsinc);
 										commetsarry.put(commentsaddobj);
-										System.out.println(commetsarry);
+										System.out.println("need to work " + commetsarry);
 									}
 
 								} // comments readline while close
@@ -234,52 +348,63 @@ public class FacebookPostsGetter {
 							commentnext = null;
 							System.out.println("there is no comments next");
 						} // comments catch close
+
+						// System.out.println("with appendeds" + jsonobjmain);
+						output = jsonobjmain.toString();
+						System.out.println("AFTER ADDING OUPUT" + output);
+						/*
+						 * try { KeyedMessage<String, String> fbdata = new
+						 * KeyedMessage<String, String>("test123", output);
+						 * producer.send(fbdata); System.out.println(
+						 * "*******  SENT THE POST ****** " + count);
+						 * 
+						 * } catch (Exception e) { }
+						 */
+						if (postdata.length() == 1) {
+							try {
+								KeyedMessage<String, String> fbdata = new KeyedMessage<String, String>("test123",
+										output);
+								producer.send(fbdata);
+								System.out.println("*******  SENT THE POST ****** " + count);
+
+							} catch (Exception e) {
+							}
+						}
 					} // for loop end
 
-					System.out.println("with appendeds" + jsonobjmain);
-					output = jsonobjmain.toString();
+					/*
+					 * System.out.println("with appendeds" + jsonobjmain);
+					 * output = jsonobjmain.toString(); try {
+					 * KeyedMessage<String, String> fbdata = new
+					 * KeyedMessage<String, String>("test123", output);
+					 * producer.send(fbdata); System.out.println(
+					 * "*******  SENT THE POST ****** " + count);
+					 * 
+					 * } catch (Exception e) { }
+					 */
 
 				}
 				try {
 					JSONObject jo = post_obj.getJSONObject("paging");
-					
+
 					postnext = jo.getString("next");
 					System.out.println("try " + postnext);
+
+					link++;
+					System.out.println("THE link " + link);
 				} catch (Exception e) {
 					postnext = null;
 					System.out.println("***** NO POST NEXT ****");
 				}
 
-				BufferedWriter writer = null;
-				try {
-					writer = new BufferedWriter(new FileWriter("/home/storm/Videos/posts.json"));
-					writer.write(jsonobjmain.toString());
-					System.out.println("Done writing");
+				// SENDING TO KAFKA
 
-				} catch (IOException e) {
-					System.out.println("vanaja");
-				} finally {
-					try {
-						if (writer != null)
-							writer.close();
-					} catch (IOException e) {
-						System.out.println("dilip");
-
-					}
-				}
-				//SENDING TO KAFKA
-			
 				in.close();
-			}	try {
-				KeyedMessage<String, String> fbdata = new KeyedMessage<String, String>("Dilip123", output);
-				producer.send(fbdata);
-				System.out.println("*******  SENT THE POST ****** " + count);
-				
-			} catch (Exception e) {
-			}
-			System.out.println(count);
-			System.out.println(postlikecount);
-			System.out.println(commentscount);
+			} // while close
+
+			//System.out.println(count);
+		    //System.out.println(postlikecount);
+			//System.out.println(commentscount);
 
 		} catch (Exception e) {
 
