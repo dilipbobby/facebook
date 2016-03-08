@@ -50,10 +50,7 @@ public static void main(String[] args) throws FacebookException, JSONException, 
             //System.out.println(res);
            // JSONObject jsonObject = res.asJSONObject();
             JSONObject jsonObject55= res1.asJSONObject();
-           
-          //  System.out.println(jsonObject55); //609425942504811
-            
-            //z=sb.append(jsonObject55);
+        
              
             JSONObject posts = jsonObject55.getJSONObject("posts");
             
@@ -95,12 +92,7 @@ public static void main(String[] args) throws FacebookException, JSONException, 
                    // System.out.println(objl);
                 }
                System.out.println(jsonObject55);
-           //  z+=sb.append(obj);
-             //sb.setLength(0);  
-            // System.out.println(z);
-                //System.out.println(obj);
-                
-                //System.out.println(count);
+           
                 
                 JSONObject jo = obj.getJSONObject("paging");
                 
@@ -117,8 +109,7 @@ public static void main(String[] args) throws FacebookException, JSONException, 
                 in.close();
                }
             System.out.println(count);
-            //System.out.println(z);
-            //System.out.println(accessTokenString);
+            
      
     }
 }

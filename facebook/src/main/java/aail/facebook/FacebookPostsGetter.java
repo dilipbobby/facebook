@@ -74,7 +74,7 @@ public class FacebookPostsGetter {
 		AccessToken accessTokenString = facebook.getOAuthAppAccessToken();
 
 		facebook.setOAuthAccessToken(accessTokenString);
-		/// BandBazaarr,rakulpreetsinghs
+		/// BrandBazaarr,rakulpreetsinghs
 		// AnushkaShetty//AnasuyaOfficial
 		String fbquery = "BrandBazaarr/?fields=posts.limit(1){id,message,name,type,picture,link,caption,description,icon,application,shares,updated_time,source,comments.summary(true){comment_count,message,can_remove,id,created_time,can_like,like_count,comments{comment_count,comments{comment_count}}},place,object_id,privacy,status_type,created_time,story,parent_id,story_tags,full_picture,likes.summary(true){id,name,username}},id,hometown,website,about,location,birthday,name,tagged{message_tags},category,category_list,talking_about_count,likes";
 		try {

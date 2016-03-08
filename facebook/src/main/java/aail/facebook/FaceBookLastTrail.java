@@ -84,7 +84,7 @@ public class FaceBookLastTrail {
 					String line = scnr.next();
 					//System.out.println("line " + lineNumber + " :" + line);
 					
-					String fbquery = "brandbazaarr/?fields=id,name,birthday,hometown,website,about,phone,location,picture,category,category_list,talking_about_count,posts.limit(1){created_time,updated_time,id,name,message,description,type,picture,full_picture,link,icon,caption,application,source,object_id,status_type,story,place,parent_id,shares,story_tags,message_tags,privacy,comments.summary(true){comment_count,message,can_remove,id,created_time,can_like,like_count,user_likes,from},likes.summary(true){id,name}}";
+					String fbquery = "BrandBazaarr/?fields=id,name,birthday,hometown,website,about,phone,location,picture,category,category_list,talking_about_count,posts.limit(1){created_time,updated_time,id,name,message,description,type,picture,full_picture,link,icon,caption,application,source,object_id,status_type,story,place,parent_id,shares,story_tags,message_tags,privacy,comments.summary(true){comment_count,message,can_remove,id,created_time,can_like,like_count,user_likes,from},likes.summary(true){id,name}}";
 					try {
 						RawAPIResponse rawresponse = facebook.callGetAPI(fbquery);
 						JSONObject jsonobjmain = rawresponse.asJSONObject();
@@ -264,6 +264,18 @@ public class FaceBookLastTrail {
 										commentnext = null;
 										System.out.println("there is no comments next");
 									} // comments catch close
+								
+								
+									if (postdata.length() == 1) {
+										try {
+											KeyedMessage<String, String> fbdata = new KeyedMessage<String, String>("test123",
+													output);
+											producer.send(fbdata);
+											System.out.println("*******  SENT THE POST ****** " + count);
+
+										} catch (Exception e) {
+										}
+									}
 								} // for loop end
 
 								// String output=jsonobjmain.toString();
@@ -309,7 +321,7 @@ public class FaceBookLastTrail {
 
 				} // read line while close
 
-			} // read file while close
+			} // read file while (true)close
 
 		} catch (Exception e) {
 
