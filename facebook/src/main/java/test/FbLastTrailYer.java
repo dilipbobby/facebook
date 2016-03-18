@@ -1,4 +1,5 @@
-package aail.facebook;
+package test;
+
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -16,6 +17,8 @@ import java.io.PrintStream;
 import java.io.RandomAccessFile;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Properties;
 import java.util.Scanner;
 
@@ -30,7 +33,7 @@ import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.producer.ProducerConfig;
 
-public class FaceBookLastTrail {
+public class FbLastTrailYer {
 
 	public static void main(String[] args) throws IOException {
 
@@ -57,6 +60,7 @@ public class FaceBookLastTrail {
 
 		final Producer<String, String> producer = new Producer<String, String>(config);
 		String output = null;
+		//KeyedMessage<String, String> fbdata = new KeyedMessage<String, String>("fbyear123", output);
 		// KeyedMessage<String, String> fbdata = new KeyedMessage<String,
 		// String>("facebook",output);
 
@@ -71,19 +75,25 @@ public class FaceBookLastTrail {
 			facebook.setOAuthAccessToken(accessTokenString);
 			/// BrandBazaarr,rakulpreetsinghs
 			// AnushkaShetty//SachinTendulkar//narendramodi
-			while (true) {
-				
+			
+				while (true) {
+			
 				 File text = new File("/home/storm/Documents/Storm-Psql-facebook/test/input.csv");
 			     
 			        //Creating Scanner instnace to read File in Java
 			        Scanner scnr = new Scanner(text);
 			     
 			        //Reading each line of file using Scanner class
+			        try{
 			        while(scnr.hasNextLine()){
 			            String line = scnr.nextLine();
 			            System.out.println( "Member"+line);
-//	String fbquery = "BrandBazaarr/?fields=posts.limit(1){id,message,name,type,picture,link,caption,description,icon,application,shares,updated_time,source,comments.summary(true){comment_count,message,can_remove,id,created_time,can_like,like_count,comments{comment_count,comments{comment_count}}},place,object_id,privacy,status_type,created_time,story,parent_id,story_tags,full_picture,likes.summary(true){id,name,username}},id,hometown,website,about,location,birthday,name,tagged{message_tags},category,category_list,talking_about_count,likes";
-					String fbquery =line+"?fields=id,name,birthday,hometown,website,about,phone,location,picture,category,category_list,talking_about_count,posts.limit(1){created_time,updated_time,id,name,message,description,type,picture,full_picture,link,icon,caption,application,source,object_id,status_type,story,place,parent_id,shares,story_tags,message_tags,privacy,comments.summary(true){comment_count,message,can_remove,id,created_time,can_like,like_count,user_likes,from},likes.summary(true){id,name}}";
+			            Runtime runtime = Runtime.getRuntime();
+			            
+			            //Print Maximum available memory
+			            System.out.println("Max Memory:" + runtime.maxMemory());
+			            
+			        String fbquery =line+"?fields=id,name,birthday,hometown,website,about,phone,location,picture,category,category_list,talking_about_count,posts.limit(1){created_time,updated_time,id,name,message,description,type,picture,full_picture,link,icon,caption,application,source,object_id,status_type,story,place,parent_id,shares,story_tags,message_tags,privacy,comments.limit(500).summary(true){comment_count,message,can_remove,id,created_time,can_like,like_count,user_likes,from},likes.limit(1000).summary(true){id,name}}";
 					RawAPIResponse rawresponse = facebook.callGetAPI(fbquery);
 					JSONObject jsonobjmain = rawresponse.asJSONObject();
 
@@ -91,16 +101,38 @@ public class FaceBookLastTrail {
 					int count = 1;
 		     		int postlikecount = 1;
 			    	int commentscount = 1;
-					JSONArray commetsarry;
+					int Putlike=0;
+			    	JSONArray commetsarry;
 					JSONArray likesdata;
-					String postlike;
-					String commentnext = null;
+					//String postlike;
+				//	String commentnext = null;
 
 					JSONObject posts = jsonobjmain.getJSONObject("posts");
 
 					JSONArray postdata = posts.getJSONArray("data");
 
 					JSONObject number = postdata.getJSONObject(0);
+					
+					String message= number.getString("message");
+					
+					//System.out.println("FIRST POST MEASSAGE "+message);
+					
+					
+				//**********************year getting***************				
+					String postct=number.getString("created_time");
+					SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+					Date postDate = sd.parse(postct);
+					SimpleDateFormat df = new SimpleDateFormat("yyyy");
+					String postyear=df.format(postDate);
+					System.out.println(postyear);
+					//Getting system date
+					Date sysdate = new Date();
+					SimpleDateFormat ddf = new SimpleDateFormat("yyyy");
+					String sysyear=ddf.format(sysdate);
+					System.out.println(sysyear);
+					if(sysyear.equals(postyear)){
+						System.out.println("EQUAL YEARS");
+	//***********************************************************************	
 
 					JSONObject likes0 = number.getJSONObject("likes");
 					likesdata = likes0.getJSONArray("data");
@@ -111,8 +143,10 @@ public class FaceBookLastTrail {
 						String postlike0 = paging0.getString("next");
 
 						while (postlike0 != null) {
-							// System.out.println("***********************************");
+							System.out.println("************** Post One Likes *********************");
 							postlikecount++;
+							System.out.println("FIRST POST MEASSAGE "+message);
+							System.out.println("POST LIKES LINK OF FIRST POST COUNT " + postlikecount);
 							URL oraclepostlike = new URL(postlike0);
 							URLConnection oraclepostlikeyc = oraclepostlike.openConnection();
 							BufferedReader oraclepostlikeycin = new BufferedReader(
@@ -128,15 +162,16 @@ public class FaceBookLastTrail {
 								for (int like1 = 0; like1 < postaddlikes0.length(); like1++) {
 									JSONObject addslikobj0 = postaddlikes0.getJSONObject(like1);
 									likesdata.put(addslikobj0);
-
+									Putlike++;
+									System.out.println("THE count PUT liKES "+Putlike);
+//System.out.println("No of likes "+likesdata);
 								} // for close
 								
-								}
+								}//1st post-likes-while close
 								
-
-							try {
+try {
 								JSONObject likesnullmake0 = postlikeadd0.getJSONObject("paging");
-								postlike = likesnullmake0.getString("next");
+								postlike0 = likesnullmake0.getString("next");
 								System.out.println();
 							} catch (Exception e) {
 								postlike0 = null;
@@ -160,12 +195,12 @@ public class FaceBookLastTrail {
 
 						JSONObject commentspg0 = comments0.getJSONObject("paging");
 						String commentnext0 = commentspg0.getString("next");
-						while (commentnext != null)
+						while (commentnext0 != null)
 
 						{
-							System.out.println("*****************************************");
+							System.out.println("*******************Post One Comments**********************");
 
-							URL oraclecomments = new URL(commentnext);
+							URL oraclecomments = new URL(commentnext0);
 							URLConnection commentsyc = oraclecomments.openConnection();
 							BufferedReader commentsin = new BufferedReader(new InputStreamReader(commentsyc.getInputStream()));
 							String commentsinputLine;
@@ -186,9 +221,9 @@ public class FaceBookLastTrail {
 
 							try {
 								JSONObject commentssnullmake = commentsobj.getJSONObject("paging");
-								commentnext = commentssnullmake.getString("next");
+								commentnext0 = commentssnullmake.getString("next");
 							} catch (Exception e) {
-								commentnext = null;
+								commentnext0 = null;
 								System.out.println("there is no comments next");
 							}
 
@@ -197,28 +232,30 @@ public class FaceBookLastTrail {
 
 					} // comments try close
 					catch (Exception e) {
-						commentnext = null;
+						//commentnext0 = null;
 						System.out.println("there is no comments next");
 					} // comments catch close
 						// System.out.println(ouput);
 					output = jsonobjmain.toString();
 					if (postdata.length() == 1) {
 						try {
-							KeyedMessage<String, String> fbdata = new KeyedMessage<String, String>("test123", output);
+							KeyedMessage<String, String> fbdata = new KeyedMessage<String, String>("fbyear123",output);
 							producer.send(fbdata);
 							//System.out.println(output);
-							System.out.println("*******  SENT THE POST ****** " + count);
+							System.out.println("*******  SENT THE FIRST POST ****** " + count);
 
 						} catch (Exception e) {
 						}
 					}
 					// ***************************************************************
-
-					JSONObject postpaging = posts.getJSONObject("paging");
+                 System.out.println("####### Check for paging #########");
+				 
+                 JSONObject postpaging = posts.getJSONObject("paging");
 
 					String postnext = postpaging.getString("next");
 
 					while (postnext != null) {
+					
 						count++;
 
 						URL post_oracle = new URL(postnext);
@@ -242,6 +279,30 @@ public class FaceBookLastTrail {
 
 								JSONObject addspostobj = addposts.getJSONObject(i);
 								postdata.remove(postdata.length() - 1);
+								
+								
+								
+								
+								
+								String postctn=addspostobj.getString("created_time");
+								System.out.println(postctn+"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+								
+								
+								SimpleDateFormat sdn = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+								Date postDaten = sdn.parse(postctn);
+								SimpleDateFormat dfn = new SimpleDateFormat("yyyy");
+								String postyearn=dfn.format(postDaten);
+								System.out.println(postyearn);
+								//Getting system date
+								Date sysdaten = new Date();
+								SimpleDateFormat ddfn = new SimpleDateFormat("yyyy");
+								String sysyearn=ddfn.format(sysdaten);
+								System.out.println(sysyearn);
+								if(sysyear.equals(postyearn)){
+									System.out.println("EQUAL YEARS");
+									
+								
+								
 							//	System.out.println(postdata.length());
 								postdata.put(addspostobj);
 
@@ -257,11 +318,11 @@ public class FaceBookLastTrail {
 
 									JSONObject paging = likes.getJSONObject("paging");
 
-									postlike = paging.getString("next");
+									String postlike = paging.getString("next");
 
 									while (postlike != null) {
-										// System.out.println("***********************************");
-										postlikecount++;
+									System.out.println("*****************LIKES DATA AFTER FIRST POST******************");
+									postlikecount++;
 										URL oraclepostlike = new URL(postlike);
 										URLConnection oraclepostlikeyc = oraclepostlike.openConnection();
 										BufferedReader oraclepostlikeycin = new BufferedReader(
@@ -276,15 +337,16 @@ public class FaceBookLastTrail {
 											for (int like = 0; like < postaddlikes.length(); like++) {
 												JSONObject addslikobj = postaddlikes.getJSONObject(like);
 												likesdata.put(addslikobj);
-												// System.out.println("ADDED LIKES CHECK
-												// IN LIKESDATA");
-												// System.out.println(likesdata);
+												Putlike++;
+												System.out.println("ADDED LIKES CHECK IN LIKESDATA"+Putlike);
+												
 											} // for close
 										}
 
 										try {
 											JSONObject likesnullmake = postlikeadd.getJSONObject("paging");
 											postlike = likesnullmake.getString("next");
+											postlikecount++;
 											
 										} catch (Exception e) {
 											postlike = null;
@@ -294,7 +356,7 @@ public class FaceBookLastTrail {
 										oraclepostlikeycin.close();
 									}
 
-									System.out.println("POST LIKEZS INCREMENT " + postlikecount);
+									System.out.println("POST LIKES LINK COUNT " + postlikecount);
 
 								} // try close
 								catch (Exception e) {
@@ -317,12 +379,12 @@ public class FaceBookLastTrail {
 								try {
 
 									JSONObject commentspg = comments.getJSONObject("paging");
-									commentnext = commentspg.getString("next");
+									String commentnext = commentspg.getString("next");
 									while (commentnext != null)
 
 									{
-										System.out.println("*****************************************");
-										commentscount++;
+										System.out.println("*****************COMMENTS DATA AFTER FIRST POST************************");
+										
 										URL oraclecomments = new URL(commentnext);
 										URLConnection commentsyc = oraclecomments.openConnection();
 										BufferedReader commentsin = new BufferedReader(
@@ -346,18 +408,20 @@ public class FaceBookLastTrail {
 										try {
 											JSONObject commentssnullmake = commentsobj.getJSONObject("paging");
 											commentnext = commentssnullmake.getString("next");
+											commentscount++;
+											
 										} catch (Exception e) {
 											commentnext = null;
 											System.out.println("there is no comments next");
 										}
-
+System.out.println(" #### Comments Next Link Count ######"+commentscount);
 										commentsin.close();
 									}
 
 								} // comments try close
 								catch (Exception e) {
-									commentnext = null;
-									System.out.println("there is no comments next");
+								//	commentnext = null;
+									System.out.println("there is no commentspg next");
 								} // comments catch close
 
 								// System.out.println("with appendeds" + jsonobjmain);
@@ -366,14 +430,17 @@ public class FaceBookLastTrail {
 								
 								if (postdata.length() == 1) {
 									try {
-										KeyedMessage<String, String> fbdata = new KeyedMessage<String, String>("test123",
-												output);
+										KeyedMessage<String, String> fbdata = new KeyedMessage<String, String>("fbyear123",output);
 										producer.send(fbdata);
 										System.out.println("*******  SENT THE POST ****** " + count);
 
 									} catch (Exception e) {
 									}
 								}
+								
+								}else{System.out.println("THIS IS A LAST YEAR POST NOT SEnding"); break;}
+
+								
 							} // for loop end
 
 					}
@@ -393,14 +460,36 @@ public class FaceBookLastTrail {
 						in.close();
 					} // while close
 
-				} // read line while close
+				
+					}
+					else
+					{
+						System.out.println("THIS IS A LAST YEAR POST NOT SEnding");
+					
+					//break;
+					
+					}
 
-			} // read file while close
+					} // read line while close
 
+			//} // read file while close
+
+		} catch (Exception e) {
+
+			System.out.println("This error is from second try   " + e);
+		} // starting catch-close
+			
+		}//while close
+			
+			
 		} catch (Exception e) {
 
 			System.out.println("This error is from first try   " + e);
 		} // starting catch-close
+
+			
+			
+			
 
 	}// main-close
 }// class-close

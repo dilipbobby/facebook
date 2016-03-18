@@ -44,8 +44,9 @@ public static void main(String[] args) throws FacebookException, JSONException, 
             String postlike;
             String commentnext;
             JSONObject posts = Mainjsonobject.getJSONObject("posts");
-            
+            System.out.println(posts);
             JSONArray post_data = posts.getJSONArray("data");
+            
             
     	    JSONObject post_paging = posts.getJSONObject("paging");
             
