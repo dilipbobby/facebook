@@ -59,6 +59,7 @@ public class FbLastTrailYer {
 		ProducerConfig config = new ProducerConfig(props);
 
 		final Producer<String, String> producer = new Producer<String, String>(config);
+		
 		String output = null;
 		//KeyedMessage<String, String> fbdata = new KeyedMessage<String, String>("fbyear123", output);
 		// KeyedMessage<String, String> fbdata = new KeyedMessage<String,
@@ -75,8 +76,8 @@ public class FbLastTrailYer {
 			facebook.setOAuthAccessToken(accessTokenString);
 			/// BrandBazaarr,rakulpreetsinghs
 			// AnushkaShetty//SachinTendulkar//narendramodi
-			
-				while (true) {
+			int cou=0;
+		//while (true) {
 			
 				 File text = new File("/home/storm/Documents/Storm-Psql-facebook/test/input.csv");
 			     
@@ -113,7 +114,7 @@ public class FbLastTrailYer {
 
 					JSONObject number = postdata.getJSONObject(0);
 					
-					String message= number.getString("message");
+				//	String message= number.getString("message");
 					
 					//System.out.println("FIRST POST MEASSAGE "+message);
 					
@@ -130,7 +131,7 @@ public class FbLastTrailYer {
 					SimpleDateFormat ddf = new SimpleDateFormat("yyyy");
 					String sysyear=ddf.format(sysdate);
 					System.out.println(sysyear);
-					if(sysyear.equals(postyear)){
+				if(sysyear.equals(postyear)){
 						System.out.println("EQUAL YEARS");
 	//***********************************************************************	
 
@@ -145,7 +146,7 @@ public class FbLastTrailYer {
 						while (postlike0 != null) {
 							System.out.println("************** Post One Likes *********************");
 							postlikecount++;
-							System.out.println("FIRST POST MEASSAGE "+message);
+						//	System.out.println("FIRST POST MEASSAGE "+message);
 							System.out.println("POST LIKES LINK OF FIRST POST COUNT " + postlikecount);
 							URL oraclepostlike = new URL(postlike0);
 							URLConnection oraclepostlikeyc = oraclepostlike.openConnection();
@@ -199,7 +200,7 @@ try {
 
 						{
 							System.out.println("*******************Post One Comments**********************");
-
+						//	System.out.println("FIRST POST MEASSAGE "+message);
 							URL oraclecomments = new URL(commentnext0);
 							URLConnection commentsyc = oraclecomments.openConnection();
 							BufferedReader commentsin = new BufferedReader(new InputStreamReader(commentsyc.getInputStream()));
@@ -239,7 +240,7 @@ try {
 					output = jsonobjmain.toString();
 					if (postdata.length() == 1) {
 						try {
-							KeyedMessage<String, String> fbdata = new KeyedMessage<String, String>("fbyear123",output);
+							KeyedMessage<String, String> fbdata = new KeyedMessage<String, String>("fbyear1234",output);
 							producer.send(fbdata);
 							//System.out.println(output);
 							System.out.println("*******  SENT THE FIRST POST ****** " + count);
@@ -279,11 +280,7 @@ try {
 
 								JSONObject addspostobj = addposts.getJSONObject(i);
 								postdata.remove(postdata.length() - 1);
-								
-								
-								
-								
-								
+							//	String message2= addspostobj.getString("message");
 								String postctn=addspostobj.getString("created_time");
 								System.out.println(postctn+"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
 								
@@ -298,11 +295,9 @@ try {
 								SimpleDateFormat ddfn = new SimpleDateFormat("yyyy");
 								String sysyearn=ddfn.format(sysdaten);
 								System.out.println(sysyearn);
-								if(sysyear.equals(postyearn)){
-									System.out.println("EQUAL YEARS");
+						if(sysyear.equals(postyearn)){
+									System.out.println("EQUAL YEARS Rest posts");
 									
-								
-								
 							//	System.out.println(postdata.length());
 								postdata.put(addspostobj);
 
@@ -323,6 +318,7 @@ try {
 									while (postlike != null) {
 									System.out.println("*****************LIKES DATA AFTER FIRST POST******************");
 									postlikecount++;
+							//		System.out.println(" POST MEASSAGE "+message2);
 										URL oraclepostlike = new URL(postlike);
 										URLConnection oraclepostlikeyc = oraclepostlike.openConnection();
 										BufferedReader oraclepostlikeycin = new BufferedReader(
@@ -338,7 +334,7 @@ try {
 												JSONObject addslikobj = postaddlikes.getJSONObject(like);
 												likesdata.put(addslikobj);
 												Putlike++;
-												System.out.println("ADDED LIKES CHECK IN LIKESDATA"+Putlike);
+												System.out.println("ADDED LIKES CHECK IN LIKESDATA COUNT"+Putlike);
 												
 											} // for close
 										}
@@ -384,7 +380,7 @@ try {
 
 									{
 										System.out.println("*****************COMMENTS DATA AFTER FIRST POST************************");
-										
+										//System.out.println(" POST MEASSAGE "+message2);
 										URL oraclecomments = new URL(commentnext);
 										URLConnection commentsyc = oraclecomments.openConnection();
 										BufferedReader commentsin = new BufferedReader(
@@ -430,7 +426,7 @@ System.out.println(" #### Comments Next Link Count ######"+commentscount);
 								
 								if (postdata.length() == 1) {
 									try {
-										KeyedMessage<String, String> fbdata = new KeyedMessage<String, String>("fbyear123",output);
+										KeyedMessage<String, String> fbdata = new KeyedMessage<String, String>("fbyear1234",output);
 										producer.send(fbdata);
 										System.out.println("*******  SENT THE POST ****** " + count);
 
@@ -438,7 +434,9 @@ System.out.println(" #### Comments Next Link Count ######"+commentscount);
 									}
 								}
 								
-								}else{System.out.println("THIS IS A LAST YEAR POST NOT SEnding"); break;}
+								}else{System.out.println("THIS IS A LAST YEAR POST NOT SEnding");
+								//break;
+								}
 
 								
 							} // for loop end
@@ -461,14 +459,14 @@ System.out.println(" #### Comments Next Link Count ######"+commentscount);
 					} // while close
 
 				
-					}
+					}//if date comparing close
 					else
 					{
-						System.out.println("THIS IS A LAST YEAR POST NOT SEnding");
+						System.out.println("THIS IS A LAST YEAR POST NOT SENDING");
 					
-					//break;
-					
-					}
+				break;
+						//System.exit(0);
+				}
 
 					} // read line while close
 
@@ -478,8 +476,10 @@ System.out.println(" #### Comments Next Link Count ######"+commentscount);
 
 			System.out.println("This error is from second try   " + e);
 		} // starting catch-close
+			        cou++;
+			        System.out.println("the count "+cou);
+	//}//while close
 			
-		}//while close
 			
 			
 		} catch (Exception e) {
@@ -488,8 +488,5 @@ System.out.println(" #### Comments Next Link Count ######"+commentscount);
 		} // starting catch-close
 
 			
-			
-			
-
 	}// main-close
 }// class-close
