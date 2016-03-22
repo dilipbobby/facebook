@@ -85,9 +85,10 @@ public class FbLastTrailYer {
 			        Scanner scnr = new Scanner(text);
 			     
 			        //Reading each line of file using Scanner class
-			        try{
+			      try{
 			        while(scnr.hasNextLine()){
-			            String line = scnr.nextLine();
+			           
+			        	String line = scnr.nextLine();
 			            System.out.println( "Member"+line);
 			            Runtime runtime = Runtime.getRuntime();
 			            
@@ -434,8 +435,8 @@ System.out.println(" #### Comments Next Link Count ######"+commentscount);
 									}
 								}
 								
-								}else{System.out.println("THIS IS A LAST YEAR POST NOT SEnding");
-								//break;
+								}else{System.out.println("THIS IS A LAST YEAR POST NOT SEnding 2nd if");
+								break;
 								}
 
 								
@@ -463,11 +464,11 @@ System.out.println(" #### Comments Next Link Count ######"+commentscount);
 					else
 					{
 						System.out.println("THIS IS A LAST YEAR POST NOT SENDING");
-					
-				break;
+						
+						 break;
 						//System.exit(0);
-				}
-
+				            }
+				
 					} // read line while close
 
 			//} // read file while close
@@ -475,6 +476,7 @@ System.out.println(" #### Comments Next Link Count ######"+commentscount);
 		} catch (Exception e) {
 
 			System.out.println("This error is from second try   " + e);
+			
 		} // starting catch-close
 			        cou++;
 			        System.out.println("the count "+cou);
