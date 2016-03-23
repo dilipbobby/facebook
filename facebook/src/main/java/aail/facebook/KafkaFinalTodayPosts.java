@@ -74,7 +74,7 @@ public class KafkaFinalTodayPosts {
 		
 		// Use default values for oauth app id.
 		
-		facebook.setOAuthAppId("1238270156199618", "177cef157d0c8c006d0067b49b4bde32");
+		facebook.setOAuthAppId("XXXXXXXXXX", "177cef157d0c8c006d0067b49b4bde32");
 		
 		AccessToken accessTokenString;
 				
