@@ -32,7 +32,7 @@ import kafka.producer.ProducerConfig;
  * @author Syed jameer
  *
  */
-public class FacebookPostsGetter {
+public class FPostsGetter {
 
 	/**
 	 * @param args
